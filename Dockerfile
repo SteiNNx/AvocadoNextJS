@@ -1,21 +1,27 @@
-FROM node:12
+# Dockerfile
 
-ENV PORT 3000
+# Use node alpine as it's a small node image
+FROM node:alpine
 
-# Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+# Create the directory on the node image 
+# where our Next.js app will live
+RUN mkdir -p /app
 
-# Installing dependencies
-COPY package*.json /usr/src/app/
-RUN npm install
+# Set /app as the working directory
+WORKDIR /app
 
-# Copying source files
-COPY . /usr/src/app
+# Copy package.json and package-lock.json
+# to the /app working directory
+COPY package*.json /app
 
-# Building app
-RUN npm run build
+# Install dependencies in /app
+RUN yarn install
+
+# Copy the rest of our Next.js folder into /app
+COPY . /app
+
+# Ensure port 3000 is accessible to our system
 EXPOSE 3000
 
-# Running the app
-CMD "npm" "run" "dev"
+# Run yarn dev, as we would via the command line 
+CMD ["yarn", "dev"]
